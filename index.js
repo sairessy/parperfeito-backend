@@ -3,13 +3,16 @@ const Datastore = require("nedb");
 const collections = {
   users: new Datastore("./src/database/users.db"),
   profilephotos: new Datastore("./src/database/profilephotos.db"),
+  feedbacks: new Datastore("./src/database/feedbacks.db"),
 }
 
 collections.users.loadDatabase();
 collections.profilephotos.loadDatabase();
+collections.feedbacks.loadDatabase();
 
 const cors = require("cors");
 const express = require("express");
+const res = require("express/lib/response");
 const app = express();
 app.use(express.json({limit: "2mb"}));
 
@@ -158,4 +161,15 @@ app.get("/updateviewsnumber/:id", (req, res) => {
   });
 
   res.json({});
+});
+
+app.post("/feedback", (req, res) => {
+  const data = req.body;
+  collections.feedbacks.insert({...data, time: Date.now().toString()});
+  res.json({});
+});
+
+app.get("/update", (req, res) => {
+  const downloadLink = "https://google.com";
+  res.redirect(downloadLink);
 });
